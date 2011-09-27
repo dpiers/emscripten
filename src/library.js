@@ -4649,7 +4649,7 @@ LibraryManager.library = {
     var dst = Number(start.getTimezoneOffset() != date.getTimezoneOffset());
     {{{ makeSetValue('tmPtr', 'offsets.tm_isdst', 'dst', 'i32') }}}
 
-    var timezone = date.toString().match(/\(([A-Z]+)\)/)[1];
+    var timezone = (date.toString().match(/\(([A-Z]+)\)/) || ['', ''])[1];
     if (!(timezone in ___tm_timezones)) {
       ___tm_timezones[timezone] = allocate(intArrayFromString(timezone), 'i8', ALLOC_NORMAL);
     }
@@ -4710,8 +4710,9 @@ LibraryManager.library = {
     var summer = new Date(2000, 6, 1);
     {{{ makeSetValue('_daylight', '0', 'Number(winter.getTimezoneOffset() != summer.getTimezoneOffset())', 'i32') }}}
 
-    var winterName = winter.toString().match(/\(([A-Z]+)\)/)[1];
-    var summerName = summer.toString().match(/\(([A-Z]+)\)/)[1];
+    // TODO: Make timezones work in IE.
+    var winterName = (winter.toString().match(/\(([A-Z]+)\)/) || ['', ''])[1];
+    var summerName = (summer.toString().match(/\(([A-Z]+)\)/) || ['', ''])[1];
     var winterNamePtr = allocate(intArrayFromString(winterName), 'i8', ALLOC_NORMAL);
     var summerNamePtr = allocate(intArrayFromString(summerName), 'i8', ALLOC_NORMAL);
     _tzname = _malloc(2 * QUANTUM_SIZE);
